@@ -1,70 +1,58 @@
 # 🤖 Deepfake Detection System: CLIP Embeddings + XGBoost Classifier
 
 ## 💡 Overview
-This project implements a complete machine-learning pipeline to detect **AI-generated faces** (deepfakes) versus **real human faces**. Our solution leverages the **CLIP (Contrastive Language–Image Pre-training) image embeddings** for superior semantic feature extraction, followed by an **XGBoost classifier** for high-performance prediction. A key innovation is the **fine-tuning** mechanism, which allows the system to rapidly adapt and generalize to new image generators (like Gemini, GPT, and Midjourney) without requiring a full model retraining.
+This project implements a complete machine-learning pipeline to detect **AI-generated faces** (deepfakes) versus **real human faces**. The system leverages **CLIP (Contrastive Language–Image Pre-training) image embeddings** for advanced semantic feature extraction, followed by an **XGBoost classifier** for robust prediction. A key innovation is the **fine-tuning mechanism**, which enables rapid adaptation to new image generators (Gemini, GPT, Midjourney, etc.) without full model retraining.
 
-### Why Deepfake Detection?
+### Motivation
+The increasing realism of AI-generated content poses serious risks:  
+- **Identity theft** and impersonation.  
+- Creation of **fake evidence** and misinformation.  
+- **Cybercrime** and reputational damage.  
 
-The increasing realism of AI-generated content poses significant risks:
-* **Identity Theft** and **Impersonation**.
-* Creation of **Fake Evidence** and **Misinformation**.
-* **Cybercrime** and **Reputational Damage**.
-
-Traditional visual-feature-based models struggle to maintain accuracy when new generators with different artifact patterns emerge. Our **semantic understanding approach** offers enhanced **robustness** and **generalization**.
+Traditional pixel-based models struggle with generalization to new generators, while our semantic-based approach ensures enhanced **robustness** and **accuracy**.
 
 ---
 
-## 🛠️ System Architecture & Repository Structure
+## 🛠️ System Architecture
 
-### System Architecture Stages
+### Pipeline Stages
 
 | Stage | Description | Key Artifact |
 | :--- | :--- | :--- |
-| **Dataset Preparation** | Convert images into CLIP embeddings and save to a single CSV file. | `dataset_embeddings.csv` |
-| **Model Training** | Train the XGBoost classifier on the 511-dimensional CLIP features. | `model_initial.pkl` |
-| **Fine-Tuning** | Adapt the existing model to new fake image styles using a lightweight, fast training pass. | `model.pkl` (Final Model) |
-| **Deployment** | Flask web application for real-time image upload and classification. | Web Interface |
-
-### Repository Structure
-├── prepare_dataset.py # Generate CLIP embeddings CSV
-├── train_model.py # Train XGBoost on embeddings
-├── fine_tuning.py # Fine-tune model on new data
-├── requirements.txt # Dependencies
-└── deployment
-├── app.py # Flask web application
-├── model.pkl # Final fine-tuned model
-├── static
-│ ├── uploads # Temporary image storage
-│ └── css/style.css # Web styling
-└── templates
-└── index.html # Web interface
+| **Dataset Preparation** | Convert images to CLIP embeddings and store as CSV. | `dataset_embeddings.csv` |
+| **Model Training** | Train XGBoost classifier on 511-dimensional CLIP features. | `model_initial.pkl` |
+| **Fine-Tuning** | Adapt model to new fake image styles via lightweight retraining. | `model.pkl` (Final Model) |
+| **Deployment** | Flask web application for real-time classification. | Web Interface |
 
 ---
 
 ## 📊 Dataset & Model Overview
 
-### Dataset Summary
-
-The dataset comprises approximately **~450,000 images** sourced from various public deepfake challenges and manually generated content.
+### Dataset
+Approximately **450,000 images** sourced from public deepfake datasets and manually generated content.
 
 | Source | Real Images | Fake Images |
 | :--- | :--- | :--- |
-| **Kaggle** (FFHQ / GRAVEX-200K / Celeb-DF / DFDC, etc.) | ✅ Yes | ✅ Yes |
-| **Manual Generation** (Gemini / GPT / Midjourney / Stable Diffusion) | ❌ No | ✅ Yes |
+| **Kaggle** (FFHQ, GRAVEX-200K, Celeb-DF, DFDC, etc.) | ✅ Yes | ✅ Yes |
+| **Manual Generation** (Gemini, GPT, Midjourney, Stable Diffusion) | ❌ No | ✅ Yes |
 
 ### Model Components
 
 #### 1. CLIP (Feature Extraction)
-* **Function:** Converts each face image into a **511-dimensional feature embedding**.
-* **Rationale:** Pre-trained by OpenAI, CLIP's embeddings capture subtle, semantic artifacts often missed by raw pixel-based models, such as **texture consistency**, **lighting artifacts**, **facial symmetry errors**, and **background blending issues**.
+- Converts each face image into a **511-dimensional embedding**.
+- Captures subtle artifacts missed by pixel-based models, including **texture consistency**, **lighting artifacts**, **facial symmetry errors**, and **background blending issues**.
 
 #### 2. XGBoost (Classifier)
-* **Function:** A highly efficient and accurate Gradient Boosting classifier.
-* **Training:** Trained on the CLIP embeddings to output a probability score, classifying the face as **Real Face** or **AI-Generated Face**.
+- Gradient Boosting classifier trained on CLIP embeddings.
+- Outputs probability scores to classify faces as **Real** or **AI-Generated**.
 
 #### 3. Fine-Tuning
-* **Method:** Allows fast, lightweight adaptation to new datasets/generators, significantly improving generalization.
-* **Code Snippet:** `adapter_model.fit(..., xgb_model=old_model.get_booster())`
+- Enables **rapid adaptation** to new generators without full retraining.
+- Improves generalization and maintains high accuracy against emerging AI models.
+- Example:  
+```python
+adapter_model.fit(..., xgb_model=old_model.get_booster())
+```
 * **Benefit:** Enables rapid deployment against emerging AI models.
 
 ---
@@ -113,6 +101,13 @@ The system is deployed via a simple, real-time web application.
     ```
     [http://127.0.0.1:5000/](http://127.0.0.1:5000/)
     ```
+
+---
+## Try the Live Demo!
+
+You can test the final, fine-tuned model instantly using the hosted Gradio app:
+
+[**Deepfake Detector Gradio App**](https://blaxinosss-ai-face-detector.hf.space/?__theme=system&deep_link=WPhhnEHdJp8)
 
 ---
 
