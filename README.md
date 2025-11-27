@@ -1,4 +1,4 @@
-# 🤖 Deepfake Detection System: CLIP Embeddings + XGBoost Classifier
+# 🤖 Deepfake Detection System
 
 ## 💡 Overview
 This project implements a complete machine-learning pipeline to detect **AI-generated faces** (deepfakes) versus **real human faces**. The system leverages **CLIP (Contrastive Language–Image Pre-training) image embeddings** for advanced semantic feature extraction, followed by an **XGBoost classifier** for robust prediction. A key innovation is the **fine-tuning mechanism**, which enables rapid adaptation to new image generators (Gemini, GPT, Midjourney, etc.) without full model retraining.
